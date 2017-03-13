@@ -5,21 +5,20 @@ import './App.css'
 
 import atlas from './maps.json'
 
-const WHITE = "black" // TODO: change color
-const RED = "#B03060"
-// const YELLOW = "#FFD700"
-const YELLOW = "#FE9A76" // orange
-const BROWN = "#A52A2A"
+const WHITE = "#999" // TODO: change color
+const RED = "#C22626"
+const RARE = "#A3A314"
+const UNIQUE = "#AF6025"
 
 const Map = ({ name }) => {
     const { tier, isUniqueMap } = atlas[name]
 
     let color
     if (tier >= 10) { color = RED }
-    else if (tier < 10 && tier >= 6) { color = YELLOW }
+    else if (tier < 10 && tier >= 6) { color = RARE }
     else { color = WHITE }
 
-    if (isUniqueMap) { color = BROWN }
+    if (isUniqueMap) { color = UNIQUE }
 
     return <span style={{ color }}>{name}</span>
 }
@@ -30,18 +29,24 @@ const MapList = ({ maps }) => (
     </div>
 )
 
+const Cell = (props) => (
+    <Table.Cell {...props} style={{ color: WHITE, borderColor: 'rgb(68, 68, 68)' }} />
+)
+
 class MapTable extends Component {
     renderHeader() {
+        const headerStyles = { backgroundColor: '#333', color: WHITE }
+
         return (
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell />
-                    <Table.HeaderCell>Name</Table.HeaderCell>
-                    <Table.HeaderCell>Tier</Table.HeaderCell>
-                    <Table.HeaderCell>From</Table.HeaderCell>
-                    <Table.HeaderCell>To</Table.HeaderCell>
-                    <Table.HeaderCell>Links</Table.HeaderCell>
-                    <Table.HeaderCell>Sextants</Table.HeaderCell>
+                    <Table.HeaderCell style={headerStyles} />
+                    <Table.HeaderCell style={headerStyles}>Name</Table.HeaderCell>
+                    <Table.HeaderCell style={headerStyles}>Tier</Table.HeaderCell>
+                    <Table.HeaderCell style={headerStyles}>From</Table.HeaderCell>
+                    <Table.HeaderCell style={headerStyles}>To</Table.HeaderCell>
+                    <Table.HeaderCell style={headerStyles}>Links</Table.HeaderCell>
+                    <Table.HeaderCell style={headerStyles}>Sextants</Table.HeaderCell>
 
                     {/* <Table.HeaderCell>Data</Table.HeaderCell> */}
                 </Table.Row>
@@ -62,22 +67,22 @@ class MapTable extends Component {
 
         return (
             <Table.Row key={name} verticalAlign="top">
-                <Table.Cell verticalAlign="middle">
+                <Cell verticalAlign="middle">
                     <Checkbox />
-                </Table.Cell>
-                <Table.Cell>
+                </Cell>
+                <Cell>
                     <p style={{ display: 'flex', alignItems: 'center' }}>
                         <img alt={name} src={icon} style={{ paddingRight: "1em" }}/>
                         <Map name={name}></Map>
                     </p>
-                </Table.Cell>
-                <Table.Cell>{tier}</Table.Cell>
-                <Table.Cell>{upgradeFrom}</Table.Cell>
-                <Table.Cell>{upgradeTo}</Table.Cell>
-                <Table.Cell>{<MapList maps={linkedTo} />}</Table.Cell>
-                <Table.Cell>{<MapList maps={sextants} />}</Table.Cell>
+                </Cell>
+                <Cell style={{ color: '' }}>{tier}</Cell>
+                <Cell style={{ color: '' }}>{upgradeFrom}</Cell>
+                <Cell>{upgradeTo}</Cell>
+                <Cell>{<MapList maps={linkedTo} />}</Cell>
+                <Cell>{<MapList maps={sextants} />}</Cell>
 
-                {/* <Table.Cell>{JSON.stringify(mapData)}</Table.Cell> */}
+                {/* <Cell>{JSON.stringify(mapData)}</Cell> */}
             </Table.Row>
         )
     }
@@ -85,7 +90,7 @@ class MapTable extends Component {
     render() {
         return (
             <div>
-                <Table celled striped compact size="small">
+                <Table celled striped compact size="small" style={{ backgroundColor: 'black' }}>
                     {this.renderHeader()}
                     <Table.Body>
                         {Object.values(atlas).map(this.renderRow)}
@@ -100,7 +105,7 @@ class App extends Component {
     render() {
         return (
             <div>
-                <Menu attached="top">
+                <Menu attached="top" style={{ backgroundColor: '#333' }}>
                     <Menu.Menu>
                         <div className="ui aligned search item">
                             <Input icon="search" placeholder="Search" />
@@ -108,7 +113,7 @@ class App extends Component {
                     </Menu.Menu>
                     <Menu.Menu position="right">
                         <div className="ui item">
-                            <Button secondary>Shaping</Button>
+                            <Button primary>Shaping</Button>
                         </div>
                         <div className="ui item">
                             <Checkbox toggle label="Complete" />
