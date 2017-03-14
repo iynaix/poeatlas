@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { Table, Checkbox } from 'semantic-ui-react'
 import fp from 'lodash/fp'
 
 import { maps as atlas } from './maps.json'
+import { toggleMap } from './reducers/atlas'
 
 const WHITE = "#999" // TODO: change color
 const RED = "#C22626"
@@ -32,7 +34,7 @@ const Cell = (props) => (
     <Table.Cell {...props} style={{ color: WHITE, borderColor: 'rgb(68, 68, 68)' }} />
 )
 
-export default class extends Component {
+class MapTable extends Component {
     renderHeader() {
         const headerStyles = { backgroundColor: '#333', color: WHITE }
 
@@ -53,7 +55,7 @@ export default class extends Component {
         )
     }
 
-    renderRow(mapData) {
+    renderRow = (mapData) => {
         const {
             name,
             tier,
@@ -67,7 +69,10 @@ export default class extends Component {
         return (
             <Table.Row key={name} verticalAlign="top">
                 <Cell verticalAlign="middle">
-                    <Checkbox />
+                    <Checkbox
+                        checked={this.props.completion[name]}
+                        onClick={() => this.props.toggleMap(name)}
+                    />
                 </Cell>
                 <Cell>
                     <p style={{ display: 'flex', alignItems: 'center' }}>
@@ -99,3 +104,7 @@ export default class extends Component {
         )
     }
 }
+
+const mapState = ({ atlas }) => atlas
+
+export default connect(mapState, { toggleMap })(MapTable)
