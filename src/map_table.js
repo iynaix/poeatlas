@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Table, Checkbox, Header } from 'semantic-ui-react'
+import { Table, Checkbox, Header, Item } from 'semantic-ui-react'
 import fp from 'lodash/fp'
 
 import { maps as atlas } from './maps.json'
@@ -33,7 +33,7 @@ const filterAtlas = (mapsArr, {
     })(mapsArr)
 }
 
-const RED = "#C22626"
+const RED = "#db2828"
 const RARE = "#A3A314"
 const UNIQUE = "#AF6025"
 
@@ -58,16 +58,18 @@ const MapList = ({ maps }) => (
 
 class MapTable extends Component {
     renderHeader() {
+        const headerStyle = { textAlign: "center", textTransform: "uppercase", color: "white", fontWeight: 'bold' }
+
         return (
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell textAlign="center" />
-                    <Table.HeaderCell textAlign="center">Name</Table.HeaderCell>
-                    <Table.HeaderCell textAlign="center">Tier</Table.HeaderCell>
-                    <Table.HeaderCell textAlign="center">From</Table.HeaderCell>
-                    <Table.HeaderCell textAlign="center">To</Table.HeaderCell>
-                    <Table.HeaderCell textAlign="center">Links</Table.HeaderCell>
-                    <Table.HeaderCell textAlign="center">Sextants</Table.HeaderCell>
+                    <Table.HeaderCell style={headerStyle} />
+                    <Table.HeaderCell style={headerStyle}>Name</Table.HeaderCell>
+                    <Table.HeaderCell style={headerStyle}>Tier</Table.HeaderCell>
+                    <Table.HeaderCell style={headerStyle}>From</Table.HeaderCell>
+                    <Table.HeaderCell style={headerStyle}>To</Table.HeaderCell>
+                    <Table.HeaderCell style={headerStyle}>Links</Table.HeaderCell>
+                    <Table.HeaderCell style={headerStyle}>Sextants</Table.HeaderCell>
 
                     {/* <Table.HeaderCell>Data</Table.HeaderCell> */}
                 </Table.Row>

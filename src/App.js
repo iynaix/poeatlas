@@ -26,7 +26,12 @@ class App extends Component {
                     </Menu.Item>
                     <Menu.Menu position="right">
                         <Menu.Item>
-                            <Button primary>Shaping</Button>
+                            <Button
+                                primary
+                                disabled
+                            >
+                                Shaping
+                            </Button>
                         </Menu.Item>
                         <Menu.Item>
                             <TriToggle value={this.props.completed} onClick={this.props.showCompleted}>
