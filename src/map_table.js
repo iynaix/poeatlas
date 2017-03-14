@@ -6,6 +6,24 @@ import fp from 'lodash/fp'
 import { maps as atlas } from './maps.json'
 import { toggleMap } from './reducers/atlas'
 
+const filterAtlas = (mapsArr, {
+    showCompleted,
+    showUnique,
+    completion,
+}) => {
+    return fp.filter(({ name, isUniqueMap }) => {
+        // handle filtering of uniques
+        if (showUnique === true && !isUniqueMap) { return false }
+        if (showUnique === false && isUniqueMap) { return false }
+
+        // handle filtering of map completions
+        if (showCompleted === true && !completion[name]) { return false }
+        if (showCompleted === false && completion[name]) { return false }
+
+        return true
+    })(mapsArr)
+}
+
 const WHITE = "#999" // TODO: change color
 const RED = "#C22626"
 const RARE = "#A3A314"
@@ -92,12 +110,14 @@ class MapTable extends Component {
     }
 
     render() {
+        const filteredMaps = filterAtlas(Object.values(atlas), this.props)
+
         return (
             <div>
                 <Table celled striped compact size="small" style={{ backgroundColor: 'black' }}>
                     {this.renderHeader()}
                     <Table.Body>
-                        {Object.values(atlas).map(this.renderRow)}
+                        {filteredMaps.map(this.renderRow)}
                     </Table.Body>
                 </Table>
             </div>

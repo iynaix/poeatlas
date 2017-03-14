@@ -5,9 +5,19 @@ import { makeActionCreator } from '../utils'
 
 const MAPNAMES = fp.zipObject(
     Object.keys(atlas),
-    /* Object.keys(atlas).map(() => false)*/
-    Object.keys(atlas).map(() => Math.random() < 0.5)
+    Object.keys(atlas).map(() => false)
 )
+
+const toggleTriState = (v) => {
+    switch (v) {
+        case true:
+            return false
+        case false:
+            return null
+        default:
+            return true
+    }
+}
 
 // ACTIONS
 
@@ -35,9 +45,9 @@ export default (state = {
             }
         }
         case SHOW_COMPLETED:
-            return { ...state, showCompleted: !showCompleted }
+            return { ...state, showCompleted: toggleTriState(state.showCompleted) }
         case SHOW_UNIQUE:
-            return { ...state, showUnique: !showUnique }
+            return { ...state, showUnique: toggleTriState(state.showUnique) }
         default:
             return state
     }

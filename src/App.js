@@ -1,9 +1,13 @@
 import React, { Component } from 'react'
-import { Menu, Input, Checkbox, Button } from 'semantic-ui-react'
-import MapTable from './map_table'
-import './App.css'
+import { connect } from 'react-redux'
+import { Menu, Input, Button } from 'semantic-ui-react'
 
-export default class extends Component {
+import './App.css'
+import { showCompleted, showUnique } from './reducers/atlas'
+import TriToggle from './tri_toggle_button'
+import MapTable from './map_table'
+
+class App extends Component {
     render() {
         return (
             <div>
@@ -18,10 +22,14 @@ export default class extends Component {
                             <Button primary>Shaping</Button>
                         </div>
                         <div className="ui item">
-                            <Checkbox toggle label="Complete" />
+                            <TriToggle value={this.props.completed} onClick={this.props.showCompleted}>
+                                Completed
+                            </TriToggle>
                         </div>
                         <div className="ui item">
-                            <Checkbox toggle label="Unique" />
+                            <TriToggle value={this.props.unique} onClick={this.props.showUnique}>
+                                Unique
+                            </TriToggle>
                         </div>
                     </Menu.Menu>
                 </Menu>
@@ -30,3 +38,10 @@ export default class extends Component {
         )
     }
 }
+
+const mapState = ({ atlas }) => ({
+    completed: atlas.showCompleted,
+    unique: atlas.showUnique,
+})
+
+export default connect(mapState, { showCompleted, showUnique })(App)
