@@ -1,10 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Table, Checkbox, Header, Item } from 'semantic-ui-react'
+import { Table, Checkbox, Header } from 'semantic-ui-react'
 import fp from 'lodash/fp'
 
 import { maps as atlas } from './maps.json'
 import { toggleMap } from './reducers/atlas'
+import { Mobile } from './utils'
+
+// NOTE: test regex here:
+// https://www.debuggex.com/?flavor=javascript
+// map tier: group 2
+// tier operation: group 3
+const TIERS_RE = /\bt(ier)?\s*:?\s*(\d{1,2})([+-]?)/i
 
 const normalizeText = (s) =>
     s.replace("ö", "o").replace(",", "").replace("'", "").replace('"', "")
@@ -15,9 +22,22 @@ const filterAtlas = (mapsArr, {
     showUnique,
     completion,
 }) => {
-    const query = new RegExp(normalizeText(search), "i")
+    /* search = 'tier: 11+'*/
+    search = normalizeText(search.trim())
 
-    return fp.filter(({ name, isUniqueMap }) => {
+    let [,, tierSearch, tierOpSearch] = TIERS_RE.exec(search) || []
+    if (tierSearch) {
+        tierSearch = parseInt(tierSearch, 10)
+    }
+
+    // second regex removes the + or - as it is not included in the word boundary
+    search = search.replace(TIERS_RE, '').replace(/[+-]/g, '')
+    // replace multiple spaces with single space
+    search = search.replace(/\s\s+/g, ' ').trim()
+
+    const query = new RegExp(search.trim(), "i")
+
+    return fp.filter(({ name, tier, isUniqueMap }) => {
         // handle filtering of uniques
         if (showUnique === true && !isUniqueMap) { return false }
         if (showUnique === false && isUniqueMap) { return false }
@@ -26,7 +46,21 @@ const filterAtlas = (mapsArr, {
         if (showCompleted === true && !completion[name]) { return false }
         if (showCompleted === false && completion[name]) { return false }
 
-        // handle the searching of maps
+        // handle searching of map tiers
+        if (tierSearch) {
+            // handle + and - for >= and <= respectively
+            if (tierOpSearch === "+") {
+                if (tier < tierSearch) { return false }
+            }
+            else if (tierOpSearch === "-") {
+                if (tier > tierSearch) { return false }
+            }
+            else if (tier !== tierSearch) {
+                return false
+            }
+        }
+
+        // finally handle the searching of maps
         if (!query.test(normalizeText(name))) { return false }
 
         return true
@@ -51,9 +85,10 @@ const Map = ({ name }) => {
 }
 
 const MapList = ({ maps }) => (
-    <div>
-        {fp.map(m => <p key={m}><Map name={m} /></p>)(maps)}
-    </div>
+    <Mobile
+        yes={() => <div>{fp.map(m => <p key={m}><Map name={m} /></p>)(maps)}</div>}
+        no={() => <span>{(maps.length ? maps : []).join(', ')}</span>}
+    />
 )
 
 class MapTable extends Component {

@@ -13,12 +13,11 @@ class AppContainer extends Component {
     state = { rehydrated: false }
 
     componentWillMount() {
-        this.setState({ rehydrated: true })
-        /* persistStore(store, {
-         *     whitelist: ["atlas"],
-         * }, () => {
-         *     this.setState({ rehydrated: true })
-         * })*/
+        persistStore(store, {
+            whitelist: ["atlas"],
+        }, () => {
+            this.setState({ rehydrated: true })
+        })
     }
 
     render() {
