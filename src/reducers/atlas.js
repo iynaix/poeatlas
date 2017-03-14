@@ -21,22 +21,27 @@ const toggleTriState = (v) => {
 
 // ACTIONS
 
+export const SEARCH = 'atlas/SEARCH'
 export const TOGGLE_COMPLETED = 'atlas/TOGGLE_COMPLETED'
 export const SHOW_COMPLETED = 'atlas/SHOW_COMPLETED'
 export const SHOW_UNIQUE = 'atlas/SHOW_UNIQUE'
 
 // ACTION CREATORS
 
+export const search = makeActionCreator(SEARCH, 'search')
 export const toggleMap = makeActionCreator(TOGGLE_COMPLETED, 'name')
 export const showCompleted = makeActionCreator(SHOW_COMPLETED)
 export const showUnique = makeActionCreator(SHOW_UNIQUE)
 
 export default (state = {
+    search: '',
     showUnique: null,
     showCompleted: null,
     completion: MAPNAMES,
 }, action) => {
     switch (action.type) {
+        case SEARCH:
+            return { ...state, search: action.search }
         case TOGGLE_COMPLETED: {
             const { completion } = state
             return {

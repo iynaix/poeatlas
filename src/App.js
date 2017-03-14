@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Menu, Input, Button } from 'semantic-ui-react'
 
 import './App.css'
-import { showCompleted, showUnique } from './reducers/atlas'
+import { showCompleted, showUnique, search } from './reducers/atlas'
 import TriToggle from './tri_toggle_button'
 import MapTable from './map_table'
 
@@ -20,17 +20,9 @@ class App extends Component {
                             type="search"
                             placeholder="Search"
                             action={{ icon: 'help' }}
+                            value={this.props.query}
+                            onChange={ev => this.props.search(ev.target.value)}
                         />
-                        {/*
-                        <Icon
-                            circular
-                            size="small"
-                            name="help"
-                            inverted
-                            color="grey"
-                            style={{ marginLeft: '1em' }}
-                        />
-                        */}
                     </Menu.Item>
                     <Menu.Menu position="right">
                         <Menu.Item>
@@ -55,8 +47,9 @@ class App extends Component {
 }
 
 const mapState = ({ atlas }) => ({
+    query: atlas.search,
     completed: atlas.showCompleted,
     unique: atlas.showUnique,
 })
 
-export default connect(mapState, { showCompleted, showUnique })(App)
+export default connect(mapState, { showCompleted, showUnique, search })(App)
