@@ -11,26 +11,41 @@ class App extends Component {
     render() {
         return (
             <div>
-                <Menu attached="top" style={{ backgroundColor: '#333' }}>
-                    <Menu.Menu>
-                        <div className="ui aligned search item">
-                            <Input icon="search" placeholder="Search" />
-                        </div>
-                    </Menu.Menu>
+                <Menu inverted>
+                    <Menu.Item header>
+                        ATLAS HELPER
+                    </Menu.Item>
+                    <Menu.Item style={{ flexGrow: 10 }}>
+                        <Input
+                            type="search"
+                            placeholder="Search"
+                            action={{ icon: 'help' }}
+                        />
+                        {/*
+                        <Icon
+                            circular
+                            size="small"
+                            name="help"
+                            inverted
+                            color="grey"
+                            style={{ marginLeft: '1em' }}
+                        />
+                        */}
+                    </Menu.Item>
                     <Menu.Menu position="right">
-                        <div className="ui item">
+                        <Menu.Item>
                             <Button primary>Shaping</Button>
-                        </div>
-                        <div className="ui item">
+                        </Menu.Item>
+                        <Menu.Item>
                             <TriToggle value={this.props.completed} onClick={this.props.showCompleted}>
                                 Completed
                             </TriToggle>
-                        </div>
-                        <div className="ui item">
+                        </Menu.Item>
+                        <Menu.Item>
                             <TriToggle value={this.props.unique} onClick={this.props.showUnique}>
                                 Unique
                             </TriToggle>
-                        </div>
+                        </Menu.Item>
                     </Menu.Menu>
                 </Menu>
                 <MapTable />

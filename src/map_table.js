@@ -24,7 +24,6 @@ const filterAtlas = (mapsArr, {
     })(mapsArr)
 }
 
-const WHITE = "#999" // TODO: change color
 const RED = "#C22626"
 const RARE = "#A3A314"
 const UNIQUE = "#AF6025"
@@ -35,7 +34,7 @@ const Map = ({ name }) => {
     let color
     if (tier >= 10) { color = RED }
     else if (tier < 10 && tier >= 6) { color = RARE }
-    else { color = WHITE }
+    else { color = "inherit" }
 
     if (isUniqueMap) { color = UNIQUE }
 
@@ -48,24 +47,18 @@ const MapList = ({ maps }) => (
     </div>
 )
 
-const Cell = (props) => (
-    <Table.Cell {...props} style={{ color: WHITE, borderColor: 'rgb(68, 68, 68)' }} />
-)
-
 class MapTable extends Component {
     renderHeader() {
-        const headerStyles = { backgroundColor: '#333', color: WHITE }
-
         return (
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell style={headerStyles} />
-                    <Table.HeaderCell style={headerStyles}>Name</Table.HeaderCell>
-                    <Table.HeaderCell style={headerStyles}>Tier</Table.HeaderCell>
-                    <Table.HeaderCell style={headerStyles}>From</Table.HeaderCell>
-                    <Table.HeaderCell style={headerStyles}>To</Table.HeaderCell>
-                    <Table.HeaderCell style={headerStyles}>Links</Table.HeaderCell>
-                    <Table.HeaderCell style={headerStyles}>Sextants</Table.HeaderCell>
+                    <Table.HeaderCell/>
+                    <Table.HeaderCell>Name</Table.HeaderCell>
+                    <Table.HeaderCell>Tier</Table.HeaderCell>
+                    <Table.HeaderCell>From</Table.HeaderCell>
+                    <Table.HeaderCell>To</Table.HeaderCell>
+                    <Table.HeaderCell>Links</Table.HeaderCell>
+                    <Table.HeaderCell>Sextants</Table.HeaderCell>
 
                     {/* <Table.HeaderCell>Data</Table.HeaderCell> */}
                 </Table.Row>
@@ -86,25 +79,25 @@ class MapTable extends Component {
 
         return (
             <Table.Row key={name} verticalAlign="top">
-                <Cell verticalAlign="middle">
+                <Table.Cell verticalAlign="middle">
                     <Checkbox
                         checked={this.props.completion[name]}
                         onClick={() => this.props.toggleMap(name)}
                     />
-                </Cell>
-                <Cell>
+                </Table.Cell>
+                <Table.Cell>
                     <p style={{ display: 'flex', alignItems: 'center' }}>
                         <img alt={name} src={icon} style={{ paddingRight: "1em" }}/>
                         <Map name={name}></Map>
                     </p>
-                </Cell>
-                <Cell style={{ color: '' }}>{tier}</Cell>
-                <Cell style={{ color: '' }}>{upgradeFrom}</Cell>
-                <Cell>{upgradeTo}</Cell>
-                <Cell>{<MapList maps={linkedTo} />}</Cell>
-                <Cell>{<MapList maps={sextants} />}</Cell>
+                </Table.Cell>
+                <Table.Cell>{tier}</Table.Cell>
+                <Table.Cell>{upgradeFrom}</Table.Cell>
+                <Table.Cell>{upgradeTo}</Table.Cell>
+                <Table.Cell>{<MapList maps={linkedTo} />}</Table.Cell>
+                <Table.Cell>{<MapList maps={sextants} />}</Table.Cell>
 
-                {/* <Cell>{JSON.stringify(mapData)}</Cell> */}
+                {/* <Table.Cell>{JSON.stringify(mapData)}</Table.Cell> */}
             </Table.Row>
         )
     }
@@ -113,14 +106,12 @@ class MapTable extends Component {
         const filteredMaps = filterAtlas(Object.values(atlas), this.props)
 
         return (
-            <div>
-                <Table celled striped compact size="small" style={{ backgroundColor: 'black' }}>
-                    {this.renderHeader()}
-                    <Table.Body>
-                        {filteredMaps.map(this.renderRow)}
-                    </Table.Body>
-                </Table>
-            </div>
+            <Table inverted celled striped compact size="small">
+                {this.renderHeader()}
+                <Table.Body>
+                    {filteredMaps.map(this.renderRow)}
+                </Table.Body>
+            </Table>
         )
     }
 }
