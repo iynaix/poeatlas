@@ -3,7 +3,7 @@ import { Grid, Dropdown } from 'semantic-ui-react'
 import fp from 'lodash/fp'
 
 import { maps as atlas, shaperOrbs } from './maps.json'
-import MapLabel from './map'
+import Map from './map'
 
 const SHAPEABLE_MAPS = fp.flow(
     // no unique maps
@@ -20,14 +20,14 @@ class Shaping extends Component {
         return (
             <Grid.Row key={mapName} columns={2}>
                 <Grid.Column>
-                    <MapLabel name={mapName} />
+                    <Map name={mapName} />
                 </Grid.Column>
                 <Grid.Column>
                     <Dropdown
                         fluid
                         search
                         selection
-                        options={options}
+                        options={[{text: "", value: null}, ...options]}
                     />
                 </Grid.Column>
             </Grid.Row>

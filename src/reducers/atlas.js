@@ -24,7 +24,7 @@ const hashid = new Hashids(
 )
 
 const encodeHashid = (arr) => hashid.encode(arr)
-const decodeHashid = (arr) => hashid.decode(arr)
+/* const decodeHashid = (arr) => hashid.decode(arr)*/
 
 const encodeCompletions = (completions) =>
     encodeHashid(

@@ -9,7 +9,7 @@ import TriToggle from './tri_toggle_button'
 import MapTable from './map_table'
 
 class App extends Component {
-    state = { showShaping: true }
+    state = { showShaping: false }
 
     render() {
         return (

@@ -5,7 +5,7 @@ import fp from 'lodash/fp'
 
 import { maps as atlas } from './maps.json'
 import { toggleMap } from './reducers/atlas'
-import MapLabel from './map'
+import Map from './map'
 import { Mobile } from './utils'
 
 // NOTE: test regex here:
@@ -70,7 +70,7 @@ const filterAtlas = (mapsArr, {
 
 const MapList = ({ maps }) => (
     <Mobile
-        yes={() => <div>{fp.map(m => <p key={m}><MapLabel name={m} /></p>)(maps)}</div>}
+        yes={() => <div>{fp.map(m => <Map key={m} name={m} />)(maps)}</div>}
         no={() => <span>{(maps.length ? maps : []).join(', ')}</span>}
     />
 )
@@ -100,7 +100,6 @@ class MapTable extends Component {
         const {
             name,
             tier,
-            icon,
             upgradeTo,
             upgradeFrom,
             linkedTo,
@@ -116,14 +115,15 @@ class MapTable extends Component {
                     />
                 </Table.Cell>
                 <Table.Cell>
-                    <p style={{ display: 'flex', alignItems: 'center' }}>
-                        <img alt={name} src={icon} style={{ paddingRight: "1em" }}/>
-                        <MapLabel name={name}></MapLabel>
-                    </p>
+                    <Map name={name}  />
                 </Table.Cell>
                 <Table.Cell>{tier}</Table.Cell>
-                <Table.Cell>{upgradeFrom}</Table.Cell>
-                <Table.Cell>{upgradeTo}</Table.Cell>
+                <Table.Cell>
+                    {upgradeFrom && <Map name={upgradeFrom} />}
+                </Table.Cell>
+                <Table.Cell>
+                    {upgradeTo && <Map name={upgradeTo} />}
+                </Table.Cell>
                 <Table.Cell>{<MapList maps={linkedTo} />}</Table.Cell>
                 <Table.Cell>{<MapList maps={sextants} />}</Table.Cell>
 
