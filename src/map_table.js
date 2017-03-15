@@ -6,7 +6,7 @@ import fp from 'lodash/fp'
 import { maps as atlas } from './maps.json'
 import { toggleMap } from './reducers/atlas'
 import Map from './map'
-import { Mobile } from './utils'
+import MapList from './map_list'
 
 // NOTE: test regex here:
 // https://www.debuggex.com/?flavor=javascript
@@ -67,13 +67,6 @@ const filterAtlas = (mapsArr, {
         return true
     })(mapsArr)
 }
-
-const MapList = ({ maps }) => (
-    <Mobile
-        yes={() => <div>{fp.map(m => <Map key={m} name={m} />)(maps)}</div>}
-        no={() => <span>{(maps.length ? maps : []).join(', ')}</span>}
-    />
-)
 
 class MapTable extends Component {
     renderHeader() {

@@ -7,7 +7,7 @@ const RED = "#db2828"
 const RARE = "#A3A314"
 const UNIQUE = "#AF6025"
 
-export default ({ name, showIcon=true }) => {
+export default ({ name, style={}, showIcon=true }) => {
     const { tier, isUniqueMap, icon } = atlas[name]
 
     let color
@@ -19,7 +19,7 @@ export default ({ name, showIcon=true }) => {
 
     if (showIcon) {
         return (
-            <div>
+            <div style={style}>
                 <Image alt={name} src={icon} avatar style={{ marginRight: '1em' }} />
                 <span style={{ color }}>{name}</span>
             </div>
