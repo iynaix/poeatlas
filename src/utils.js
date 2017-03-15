@@ -1,5 +1,6 @@
 import React from 'react'
 import MediaQuery from 'react-responsive'
+import Hashids from 'hashids'
 
 export const makeActionCreator = (type, ...argNames) =>
     (...args) => {
@@ -24,3 +25,12 @@ export const Mobile = ({
         {(match) => (match ? yes() : no())}
     </MediaQuery>
 )
+
+const hashid = new Hashids(
+    'poeatlas',
+    0,
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.-~',
+)
+
+export const encodeHashid = (arr) => hashid.encode(arr)
+export const decodeHashid = (arr) => hashid.decode(arr)

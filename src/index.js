@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import App from './App'
 
 import './index.css'
 import initStore from './store'
+import App from './App'
 
 const store = initStore()
 
@@ -12,7 +12,7 @@ class AppContainer extends Component {
     state = { rehydrated: false }
 
     componentWillMount() {
-         this.setState({ rehydrated: true })
+        this.setState({ rehydrated: true })
 
         /* persistStore(store, {
          *     whitelist: ["atlas"],

@@ -1,15 +1,21 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import queryString from 'query-string'
 import { Menu, Input, Button } from 'semantic-ui-react'
 
 import './App.css'
-import { showCompleted, showUnique, search } from './reducers/atlas'
+import { showCompleted, showUnique, load, search } from './reducers/atlas'
+import { decodeHashid } from './utils'
 import Shaping from './shaping'
 import TriToggle from './tri_toggle_button'
 import MapTable from './map_table'
 
 class App extends Component {
     state = { showShaping: false }
+
+    componentWillMount() {
+        this.props.load(decodeHashid(queryString.parse(window.location.search.substr(1)).c || ""))
+    }
 
     render() {
         return (
@@ -63,4 +69,4 @@ const mapState = ({ atlas }) => ({
     unique: atlas.showUnique,
 })
 
-export default connect(mapState, { showCompleted, showUnique, search })(App)
+export default connect(mapState, { showCompleted, showUnique, search, load })(App)
