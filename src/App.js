@@ -37,6 +37,7 @@ class App extends Component {
                         <Menu.Item>
                             <Button
                                 primary
+                                disabled
                                 onClick={() => this.setState((prevState) => ({
                                     ...prevState,
                                     showShaping: !prevState.showShaping,

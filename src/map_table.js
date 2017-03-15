@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Table, Checkbox, Header } from 'semantic-ui-react'
-import fp from 'lodash/fp'
 
-import { maps as atlas } from './maps.json'
+import { atlas } from './maps.json'
 import { toggleMap } from './reducers/atlas'
 import Map from './map'
 import MapList from './map_list'
@@ -17,7 +16,7 @@ const TIERS_RE = /\bt(ier)?\s*:?\s*(\d{1,2})([+-]?)/i
 const normalizeText = (s) =>
     s.replace("ö", "o").replace(",", "").replace("'", "").replace('"', "")
 
-const filterAtlas = (mapsArr, {
+const filterAtlas = ({
     search,
     showCompleted,
     showUnique,
@@ -38,7 +37,7 @@ const filterAtlas = (mapsArr, {
 
     const query = new RegExp(search.trim(), "i")
 
-    return fp.filter(({ name, tier, isUniqueMap }) => {
+    return atlas.filter(({ name, tier, isUniqueMap }) => {
         // handle filtering of uniques
         if (showUnique === true && !isUniqueMap) { return false }
         if (showUnique === false && isUniqueMap) { return false }
@@ -65,7 +64,7 @@ const filterAtlas = (mapsArr, {
         if (!query.test(normalizeText(name))) { return false }
 
         return true
-    })(mapsArr)
+    })
 }
 
 class MapTable extends Component {
@@ -82,8 +81,6 @@ class MapTable extends Component {
                     <Table.HeaderCell style={headerStyle}>To</Table.HeaderCell>
                     <Table.HeaderCell style={headerStyle}>Links</Table.HeaderCell>
                     <Table.HeaderCell style={headerStyle}>Sextants</Table.HeaderCell>
-
-                    {/* <Table.HeaderCell>Data</Table.HeaderCell> */}
                 </Table.Row>
             </Table.Header>
         )
@@ -91,6 +88,7 @@ class MapTable extends Component {
 
     renderRow = (mapData) => {
         const {
+            id,
             name,
             tier,
             upgradeTo,
@@ -103,30 +101,28 @@ class MapTable extends Component {
             <Table.Row key={name} verticalAlign="top">
                 <Table.Cell verticalAlign="middle">
                     <Checkbox
-                        checked={this.props.completion[name]}
-                        onClick={() => this.props.toggleMap(name)}
+                        checked={this.props.completion[id]}
+                        onClick={() => this.props.toggleMap(id)}
                     />
                 </Table.Cell>
                 <Table.Cell>
-                    <Map name={name}  />
+                    <Map id={id} />
                 </Table.Cell>
                 <Table.Cell>{tier}</Table.Cell>
                 <Table.Cell>
-                    {upgradeFrom && <Map name={upgradeFrom} />}
+                    {upgradeFrom && <Map id={upgradeFrom} />}
                 </Table.Cell>
                 <Table.Cell>
-                    {upgradeTo && <Map name={upgradeTo} />}
+                    {upgradeTo && <Map id={upgradeTo} />}
                 </Table.Cell>
                 <Table.Cell>{<MapList maps={linkedTo} />}</Table.Cell>
                 <Table.Cell>{<MapList maps={sextants} />}</Table.Cell>
-
-                {/* <Table.Cell>{JSON.stringify(mapData)}</Table.Cell> */}
             </Table.Row>
         )
     }
 
     render() {
-        const filteredMaps = filterAtlas(Object.values(atlas), this.props)
+        const filteredMaps = filterAtlas(this.props)
 
         return (
             <Table inverted celled striped size="small">

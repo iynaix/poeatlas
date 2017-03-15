@@ -1,12 +1,11 @@
 import fp from 'lodash/fp'
 import queryString from 'query-string'
 
-import { maps as atlas } from '../maps.json'
+import { atlas } from '../maps.json'
 import { makeActionCreator, encodeHashid } from '../utils'
 
 // current version of the poe maps, update this number and handle different json dumps when GGG changes maps
 const MAP_JSON_VERSION = 1
-const MAP_NAMES = Object.keys(atlas)
 
 const toggleTriState = (v) => {
     switch (v) {
@@ -19,12 +18,13 @@ const toggleTriState = (v) => {
     }
 }
 
-const encodeCompletions = (completions) =>
-    encodeHashid(
-        Object.keys(
-            fp.pickBy((v, k) => v)(completions)
-        ).map(name => atlas[name].id)
-    )
+const encodeCompletions = (completions) => {
+    let arr = []
+    completions.forEach((v, i) => {
+        if (v) { arr.push(i) }
+    })
+    return encodeHashid(arr)
+}
 
 const stateForUrl = (completions) => ({
     // completions
@@ -45,7 +45,7 @@ export const SHOW_UNIQUE = 'atlas/SHOW_UNIQUE'
 
 export const load = makeActionCreator(LOAD, 'initialData')
 export const search = makeActionCreator(SEARCH, 'search')
-export const toggleMap = makeActionCreator(TOGGLE_COMPLETED, 'name')
+export const toggleMap = makeActionCreator(TOGGLE_COMPLETED, 'id')
 export const showCompleted = makeActionCreator(SHOW_COMPLETED)
 export const showUnique = makeActionCreator(SHOW_UNIQUE)
 
@@ -53,27 +53,25 @@ export default (state = {
     search: '',
     showUnique: null,
     showCompleted: null,
-    completion: null,
+    completion: fp.fill(0, atlas.length, false, Array(atlas.length)),
 }, action) => {
     switch (action.type) {
-        case LOAD:
-            return {
-                ...state,
-                completion: fp.zipObject(
-                    MAP_NAMES,
-                    fp.map((name) => action.initialData.indexOf(atlas[name].id) !== -1)(MAP_NAMES),
-                ),
-            }
+        case LOAD: {
+            const tmp = state.completion.slice()
+
+            action.initialData.forEach(id => { tmp[id] = !tmp[id] })
+            return { ...state, completion: tmp }
+        }
         case SEARCH:
             return { ...state, search: action.search }
         case TOGGLE_COMPLETED: {
-            let { completion } = state
-            completion = { ...completion, [action.name]: !completion[action.name] }
+            const tmp = state.completion.slice()
+            tmp[action.id] = !tmp[action.id]
 
-            const urlParams = stateForUrl(completion)
+            const urlParams = stateForUrl(tmp)
             window.history.replaceState(urlParams, null, `/?${queryString.stringify(urlParams)}`)
 
-            return { ...state, completion }
+            return { ...state, completion: tmp }
         }
         case SHOW_COMPLETED:
             return { ...state, showCompleted: toggleTriState(state.showCompleted) }

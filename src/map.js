@@ -1,14 +1,14 @@
 import React from 'react'
 import { Image } from 'semantic-ui-react'
 
-import { maps as atlas } from './maps.json'
+import { atlas } from './maps.json'
 
 const RED = "#db2828"
 const RARE = "#A3A314"
 const UNIQUE = "#AF6025"
 
-export default ({ name, style={}, showIcon=true }) => {
-    const { tier, isUniqueMap, icon } = atlas[name]
+export default ({ id, style={}, showIcon=true }) => {
+    const { name, tier, isUniqueMap, icon } = atlas[id]
 
     let color
     if (tier >= 11) { color = RED }

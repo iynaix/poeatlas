@@ -20,7 +20,7 @@ class Shaping extends Component {
         return (
             <Grid.Row key={mapName} columns={2}>
                 <Grid.Column>
-                    <Map name={mapName} />
+                    <Map id={mapName} />
                 </Grid.Column>
                 <Grid.Column>
                     <Dropdown
