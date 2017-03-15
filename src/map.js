@@ -11,8 +11,8 @@ export default ({ name, style={}, showIcon=true }) => {
     const { tier, isUniqueMap, icon } = atlas[name]
 
     let color
-    if (tier >= 10) { color = RED }
-    else if (tier < 10 && tier >= 6) { color = RARE }
+    if (tier >= 11) { color = RED }
+    else if (tier <= 10 && tier >= 6) { color = RARE }
     else { color = "inherit" }
 
     if (isUniqueMap) { color = UNIQUE }
