@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import ReactDOM from 'react-dom'
-import { persistStore } from 'redux-persist'
 import { Provider } from 'react-redux'
 import App from './App'
 
@@ -13,11 +12,13 @@ class AppContainer extends Component {
     state = { rehydrated: false }
 
     componentWillMount() {
-        persistStore(store, {
-            whitelist: ["atlas"],
-        }, () => {
-            this.setState({ rehydrated: true })
-        })
+         this.setState({ rehydrated: true })
+
+        /* persistStore(store, {
+         *     whitelist: ["atlas"],
+         * }, () => {
+         *     this.setState({ rehydrated: true })
+         * })*/
     }
 
     render() {

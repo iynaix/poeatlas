@@ -1,5 +1,4 @@
 import { createStore, compose } from 'redux'
-import { autoRehydrate } from 'redux-persist'
 
 import rootReducer from  './reducers'
 
@@ -10,6 +9,5 @@ export default (initialState) =>
         rootReducer,
         initialState,
         composeEnhancers(
-            autoRehydrate(),
         ),
     )
