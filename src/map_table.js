@@ -5,6 +5,7 @@ import fp from 'lodash/fp'
 
 import { maps as atlas } from './maps.json'
 import { toggleMap } from './reducers/atlas'
+import MapLabel from './map'
 import { Mobile } from './utils'
 
 // NOTE: test regex here:
@@ -67,26 +68,9 @@ const filterAtlas = (mapsArr, {
     })(mapsArr)
 }
 
-const RED = "#db2828"
-const RARE = "#A3A314"
-const UNIQUE = "#AF6025"
-
-const Map = ({ name }) => {
-    const { tier, isUniqueMap } = atlas[name]
-
-    let color
-    if (tier >= 10) { color = RED }
-    else if (tier < 10 && tier >= 6) { color = RARE }
-    else { color = "inherit" }
-
-    if (isUniqueMap) { color = UNIQUE }
-
-    return <span style={{ color }}>{name}</span>
-}
-
 const MapList = ({ maps }) => (
     <Mobile
-        yes={() => <div>{fp.map(m => <p key={m}><Map name={m} /></p>)(maps)}</div>}
+        yes={() => <div>{fp.map(m => <p key={m}><MapLabel name={m} /></p>)(maps)}</div>}
         no={() => <span>{(maps.length ? maps : []).join(', ')}</span>}
     />
 )
@@ -134,7 +118,7 @@ class MapTable extends Component {
                 <Table.Cell>
                     <p style={{ display: 'flex', alignItems: 'center' }}>
                         <img alt={name} src={icon} style={{ paddingRight: "1em" }}/>
-                        <Map name={name}></Map>
+                        <MapLabel name={name}></MapLabel>
                     </p>
                 </Table.Cell>
                 <Table.Cell>{tier}</Table.Cell>

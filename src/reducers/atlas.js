@@ -1,12 +1,10 @@
 import fp from 'lodash/fp'
+import Hashids from 'hashids'
 
 import { maps as atlas } from '../maps.json'
 import { makeActionCreator } from '../utils'
 
-const MAPNAMES = fp.zipObject(
-    Object.keys(atlas),
-    Object.keys(atlas).map(() => false)
-)
+const MAP_NAMES = Object.keys(atlas)
 
 const toggleTriState = (v) => {
     switch (v) {
@@ -18,6 +16,22 @@ const toggleTriState = (v) => {
             return true
     }
 }
+
+const hashid = new Hashids(
+    'poeatlas',
+    0,
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_.-~',
+)
+
+const encodeHashid = (arr) => hashid.encode(arr)
+const decodeHashid = (arr) => hashid.decode(arr)
+
+const encodeCompletions = (completions) =>
+    encodeHashid(
+        Object.keys(
+            fp.pickBy((v, k) => v)(completions)
+        ).map(name => atlas[name].id)
+    )
 
 // ACTIONS
 
@@ -37,17 +51,20 @@ export default (state = {
     search: '',
     showUnique: null,
     showCompleted: null,
-    completion: MAPNAMES,
+    completion: fp.zipObject(
+        MAP_NAMES,
+        Object.keys(atlas).map(() => false)
+    ),
 }, action) => {
     switch (action.type) {
         case SEARCH:
             return { ...state, search: action.search }
         case TOGGLE_COMPLETED: {
-            const { completion } = state
-            return {
-                ...state,
-                completion: { ...completion, [action.name]: !completion[action.name] },
-            }
+            let { completion } = state
+            completion = { ...completion, [action.name]: !completion[action.name] }
+            console.info("ENCODED COMPLETIONS", encodeCompletions(completion))
+
+            return { ...state, completion }
         }
         case SHOW_COMPLETED:
             return { ...state, showCompleted: toggleTriState(state.showCompleted) }

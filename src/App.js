@@ -4,10 +4,13 @@ import { Menu, Input, Button } from 'semantic-ui-react'
 
 import './App.css'
 import { showCompleted, showUnique, search } from './reducers/atlas'
+import Shaping from './shaping'
 import TriToggle from './tri_toggle_button'
 import MapTable from './map_table'
 
 class App extends Component {
+    state = { showShaping: true }
+
     render() {
         return (
             <div>
@@ -28,7 +31,10 @@ class App extends Component {
                         <Menu.Item>
                             <Button
                                 primary
-                                disabled
+                                onClick={() => this.setState((prevState) => ({
+                                    ...prevState,
+                                    showShaping: !prevState.showShaping,
+                                }))}
                             >
                                 Shaping
                             </Button>
@@ -45,7 +51,7 @@ class App extends Component {
                         </Menu.Item>
                     </Menu.Menu>
                 </Menu>
-                <MapTable />
+                {this.state.showShaping ? <Shaping /> : <MapTable />}
             </div>
         )
     }
