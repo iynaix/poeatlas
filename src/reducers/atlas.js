@@ -37,6 +37,7 @@ const stateForUrl = (completions) => ({
 
 export const LOAD = 'atlas/LOAD'
 export const SEARCH = 'atlas/SEARCH'
+export const TOGGLE_SHAPING = 'atlas/TOGGLE_SHAPING'
 export const TOGGLE_COMPLETED = 'atlas/TOGGLE_COMPLETED'
 export const SHOW_COMPLETED = 'atlas/SHOW_COMPLETED'
 export const SHOW_UNIQUE = 'atlas/SHOW_UNIQUE'
@@ -45,12 +46,14 @@ export const SHOW_UNIQUE = 'atlas/SHOW_UNIQUE'
 
 export const load = makeActionCreator(LOAD, 'initialData')
 export const search = makeActionCreator(SEARCH, 'search')
+export const toggleShaping = makeActionCreator(TOGGLE_SHAPING)
 export const toggleMap = makeActionCreator(TOGGLE_COMPLETED, 'id')
 export const showCompleted = makeActionCreator(SHOW_COMPLETED)
 export const showUnique = makeActionCreator(SHOW_UNIQUE)
 
 export default (state = {
     search: '',
+    showShaping: false,
     showUnique: null,
     showCompleted: null,
     completion: fp.fill(0, atlas.length, false, Array(atlas.length)),
@@ -63,7 +66,9 @@ export default (state = {
             return { ...state, completion: tmp }
         }
         case SEARCH:
-            return { ...state, search: action.search }
+            return { ...state, showShaping: false, search: action.search }
+        case TOGGLE_SHAPING:
+            return { ...state, showShaping: !state.showShaping }
         case TOGGLE_COMPLETED: {
             const tmp = state.completion.slice()
             tmp[action.id] = !tmp[action.id]

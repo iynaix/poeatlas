@@ -1,23 +1,24 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import queryString from 'query-string'
-import { Menu, Input, Button } from 'semantic-ui-react'
+import { Menu, Grid, Input, Button, Statistic } from 'semantic-ui-react'
+import fp from 'lodash/fp'
 
 import './App.css'
-import { showCompleted, showUnique, load, search } from './reducers/atlas'
+import { showCompleted, showUnique, toggleShaping, load, search } from './reducers/atlas'
 import { decodeHashid } from './utils'
 import Shaping from './shaping'
 import TriToggle from './tri_toggle_button'
 import MapTable from './map_table'
 
 class App extends Component {
-    state = { showShaping: true }
-
     componentWillMount() {
         this.props.load(decodeHashid(queryString.parse(window.location.search.substr(1)).c || ""))
     }
 
     render() {
+        const { completions } = this.props
+
         return (
             <div>
                 <Menu inverted>
@@ -37,10 +38,7 @@ class App extends Component {
                         <Menu.Item>
                             <Button
                                 primary
-                                onClick={() => this.setState((prevState) => ({
-                                    ...prevState,
-                                    showShaping: !prevState.showShaping,
-                                }))}
+                                onClick={this.props.toggleShaping}
                             >
                                 Shaping
                             </Button>
@@ -57,7 +55,22 @@ class App extends Component {
                         </Menu.Item>
                     </Menu.Menu>
                 </Menu>
-                {this.state.showShaping ? <Shaping /> : <MapTable />}
+
+                <Grid>
+                    <Grid.Row>
+                        <Grid.Column width={1} />
+                        <Grid.Column width={5}>
+                            <Statistic
+                                horizontal
+                                inverted
+                                value={`${fp.sum(completions)} / ${completions.length}`}
+                                label='Maps'
+                            />
+                        </Grid.Column>
+                    </Grid.Row>
+                </Grid>
+
+                {this.props.showShaping ? <Shaping /> : <MapTable />}
             </div>
         )
     }
@@ -65,8 +78,10 @@ class App extends Component {
 
 const mapState = ({ atlas }) => ({
     query: atlas.search,
+    showShaping: atlas.showShaping,
     completed: atlas.showCompleted,
     unique: atlas.showUnique,
+    completions: atlas.completion,
 })
 
-export default connect(mapState, { showCompleted, showUnique, search, load })(App)
+export default connect(mapState, { showCompleted, showUnique, toggleShaping, search, load })(App)
