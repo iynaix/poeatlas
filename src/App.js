@@ -11,7 +11,7 @@ import TriToggle from './tri_toggle_button'
 import MapTable from './map_table'
 
 class App extends Component {
-    state = { showShaping: false }
+    state = { showShaping: true }
 
     componentWillMount() {
         this.props.load(decodeHashid(queryString.parse(window.location.search.substr(1)).c || ""))
@@ -37,7 +37,6 @@ class App extends Component {
                         <Menu.Item>
                             <Button
                                 primary
-                                disabled
                                 onClick={() => this.setState((prevState) => ({
                                     ...prevState,
                                     showShaping: !prevState.showShaping,
