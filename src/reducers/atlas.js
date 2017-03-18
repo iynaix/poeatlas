@@ -38,7 +38,8 @@ const stateForUrl = (completions) => ({
 export const LOAD = 'atlas/LOAD'
 export const SEARCH = 'atlas/SEARCH'
 export const TOGGLE_SHAPING = 'atlas/TOGGLE_SHAPING'
-export const TOGGLE_COMPLETED = 'atlas/TOGGLE_COMPLETED'
+export const TOGGLE_MAP = 'atlas/TOGGLE_MAP'
+export const TOGGLE_MAP_RANGE = 'atlas/TOGGLE_MAP_RANGE'
 export const SHOW_COMPLETED = 'atlas/SHOW_COMPLETED'
 export const SHOW_UNIQUE = 'atlas/SHOW_UNIQUE'
 
@@ -47,7 +48,8 @@ export const SHOW_UNIQUE = 'atlas/SHOW_UNIQUE'
 export const load = makeActionCreator(LOAD, 'initialData')
 export const search = makeActionCreator(SEARCH, 'search')
 export const toggleShaping = makeActionCreator(TOGGLE_SHAPING)
-export const toggleMap = makeActionCreator(TOGGLE_COMPLETED, 'id')
+export const toggleMap = makeActionCreator(TOGGLE_MAP, 'id')
+export const toggleMapRange = makeActionCreator(TOGGLE_MAP_RANGE, 'start', 'end')
 export const showCompleted = makeActionCreator(SHOW_COMPLETED)
 export const showUnique = makeActionCreator(SHOW_UNIQUE)
 
@@ -69,7 +71,7 @@ export default (state = {
             return { ...state, showShaping: false, search: action.search }
         case TOGGLE_SHAPING:
             return { ...state, showShaping: !state.showShaping }
-        case TOGGLE_COMPLETED: {
+        case TOGGLE_MAP: {
             const tmp = state.completion.slice()
             tmp[action.id] = !tmp[action.id]
 
@@ -77,6 +79,24 @@ export default (state = {
             window.history.replaceState(urlParams, null, `/?${queryString.stringify(urlParams)}`)
 
             return { ...state, completion: tmp }
+        }
+        case TOGGLE_MAP_RANGE: {
+            let lower = action.start
+            let upper = action.end
+
+            if (action.start > action.end) {
+                lower = action.end
+                upper = action.start
+            }
+
+            console.info(lower, upper)
+            const newCompletion = state.completion.map((v, idx) =>
+                (idx >= lower && idx <= upper) ? state.completion[action.start] : v)
+
+            const urlParams = stateForUrl(newCompletion)
+            window.history.replaceState(urlParams, null, `/?${queryString.stringify(urlParams)}`)
+
+            return { ...state, completion: newCompletion }
         }
         case SHOW_COMPLETED:
             return { ...state, showCompleted: toggleTriState(state.showCompleted) }

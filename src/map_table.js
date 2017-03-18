@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Table, Checkbox, Header } from 'semantic-ui-react'
 
 import { atlas } from './maps.json'
-import { toggleMap } from './reducers/atlas'
+import { toggleMap, toggleMapRange } from './reducers/atlas'
 import Map from './map'
 import MapList from './map_list'
 
@@ -68,6 +68,8 @@ const filterAtlas = ({
 }
 
 class MapTable extends Component {
+    state = { lastChecked: null }
+
     renderHeader() {
         const headerStyle = { textAlign: "center", textTransform: "uppercase", color: "white", fontWeight: 'bold' }
 
@@ -102,21 +104,39 @@ class MapTable extends Component {
                 <Table.Cell verticalAlign="middle">
                     <Checkbox
                         checked={this.props.completion[id]}
-                        onClick={() => this.props.toggleMap(id)}
+                        onClick={(e) => {
+                            const shiftPressed = e.shiftKey
+
+                            this.setState((prevState) => {
+                                if (shiftPressed) {
+                                    // shift pressed, do the toggle for the checkboxes in between
+                                    this.props.toggleMapRange(prevState.lastChecked, id)
+                                } else {
+                                    // simple toggle of the individual id
+                                    this.props.toggleMap(id)
+                                }
+
+                                return {
+                                    ...prevState,
+                                    // toggle the lastChecked
+                                    lastChecked: prevState.lastChecked ? null : id,
+                                }
+                            })
+                        }}
                     />
                 </Table.Cell>
-                <Table.Cell>
+                {/* <Table.Cell>
                     <Map id={id} />
-                </Table.Cell>
-                <Table.Cell>{tier}</Table.Cell>
-                <Table.Cell>
+                    </Table.Cell>
+                    <Table.Cell>{tier}</Table.Cell>
+                    <Table.Cell>
                     {upgradeFrom && <Map id={upgradeFrom} />}
-                </Table.Cell>
-                <Table.Cell>
+                    </Table.Cell>
+                    <Table.Cell>
                     {upgradeTo && <Map id={upgradeTo} />}
-                </Table.Cell>
-                <Table.Cell>{<MapList maps={linkedTo} />}</Table.Cell>
-                <Table.Cell>{<MapList maps={sextants} />}</Table.Cell>
+                    </Table.Cell>
+                    <Table.Cell>{<MapList maps={linkedTo} />}</Table.Cell>
+                    <Table.Cell>{<MapList maps={sextants} />}</Table.Cell> */}
             </Table.Row>
         )
     }
@@ -155,4 +175,4 @@ class MapTable extends Component {
 
 const mapState = ({ atlas }) => atlas
 
-export default connect(mapState, { toggleMap })(MapTable)
+export default connect(mapState, { toggleMap, toggleMapRange })(MapTable)
