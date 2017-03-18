@@ -125,18 +125,18 @@ class MapTable extends Component {
                         }}
                     />
                 </Table.Cell>
-                {/* <Table.Cell>
+                <Table.Cell>
                     <Map id={id} />
-                    </Table.Cell>
-                    <Table.Cell>{tier}</Table.Cell>
-                    <Table.Cell>
+                </Table.Cell>
+                <Table.Cell>{tier}</Table.Cell>
+                <Table.Cell>
                     {upgradeFrom && <Map id={upgradeFrom} />}
-                    </Table.Cell>
-                    <Table.Cell>
+                </Table.Cell>
+                <Table.Cell>
                     {upgradeTo && <Map id={upgradeTo} />}
-                    </Table.Cell>
-                    <Table.Cell>{<MapList maps={linkedTo} />}</Table.Cell>
-                    <Table.Cell>{<MapList maps={sextants} />}</Table.Cell> */}
+                </Table.Cell>
+                <Table.Cell>{<MapList maps={linkedTo} />}</Table.Cell>
+                <Table.Cell>{<MapList maps={sextants} />}</Table.Cell>
             </Table.Row>
         )
     }
